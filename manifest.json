@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "Job Listing Assistant",
+  "version": "1.0",
+  "description": "Analyzes job listings on LinkedIn",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://*.linkedin.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.linkedin.com/jobs/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://*.linkedin.com/jobs/*"],
+      "js": ["js/content-module.js"],
+      "type": "module"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "js/core/*",
+        "js/sites/*",
+        "js/ui/*",
+        "js/utils/*", 
+        "*.js",
+        "feedback.js", 
+        "yes_jobs.html", 
+        "yes_jobs.js"
+      ],
+      "matches": ["https://*.linkedin.com/*", "<all_urls>"]
+    }
+  ]
+} 

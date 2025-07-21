@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Listing Assistant Options</title>
+    <style>
+        body {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #0073b1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005582;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Job Listing Assistant Options</h1>
+        
+        <div class="section">
+            <h2>OpenAI API Key</h2>
+            <p>Enter your OpenAI API key below. Use '0' for mock responses.</p>
+            <input type="text" id="apiKey" placeholder="Enter API key">
+        </div>
+
+        <div class="section">
+            <h2>Job Matching Criteria</h2>
+            <p>Enter the criteria for analyzing job listings. This will be used both for automatic analysis and feedback processing.</p>
+            <textarea id="analysisCriteria" placeholder="Enter your job matching criteria here. For example:&#10;&#10;Please consider:&#10;1. Must be a remote position&#10;2. Salary should be above $150k&#10;3. Should not require more than 5 years experience&#10;4. Tech stack should include React&#10;5. No on-call requirements"></textarea>
+        </div>
+
+        <div class="section">
+            <h2>Your Resume</h2>
+            <p>Paste your resume here to help improve job matching criteria recommendations. This information stays on your device and is only used when you submit feedback on job listings.</p>
+            <textarea id="userResume" placeholder="Paste your resume or a detailed summary of your skills, experience, and job preferences here. This will help the system provide more personalized job matching criteria."></textarea>
+        </div>
+
+        <button id="save">Save Settings</button>
+        <div id="status" class="status" style="display: none;"></div>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html> 

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matching Jobs - Job Listing Assistant</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background-color: #0077b5;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .container {
+            display: flex;
+            flex: 1;
+            height: calc(100% - 60px);
+        }
+        .job-list {
+            width: 30%;
+            overflow-y: auto;
+            border-right: 1px solid #ddd;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        .job-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .job-item:hover {
+            background-color: #f5f5f5;
+        }
+        .job-item.active {
+            background-color: #e6f7ff;
+            border-left: 3px solid #0077b5;
+        }
+        .job-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #0077b5;
+        }
+        .job-company {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .job-frame {
+            flex: 1;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #777;
+            text-align: center;
+            padding: 20px;
+        }
+        .empty-state h2 {
+            margin-bottom: 10px;
+        }
+        .no-jobs {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #777;
+            text-align: center;
+            padding: 20px;
+        }
+        /* Job preview styles */
+        .job-preview {
+            padding: 25px;
+            height: 100%;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .preview-header {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .preview-header h2 {
+            margin: 0 0 10px 0;
+            color: #0077b5;
+        }
+        .preview-header h3 {
+            margin: 0 0 10px 0;
+            font-weight: normal;
+            color: #555;
+        }
+        .preview-location {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .preview-content {
+            margin-bottom: 30px;
+        }
+        .preview-section {
+            margin-bottom: 20px;
+        }
+        .preview-section h4 {
+            margin: 0 0 10px 0;
+            color: #444;
+        }
+        .preview-section p {
+            margin: 0;
+            line-height: 1.5;
+            color: #555;
+        }
+        .preview-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .view-job-btn {
+            display: inline-block;
+            background-color: #0077b5;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            flex: 1;
+        }
+        .view-job-btn:hover {
+            background-color: #006699;
+        }
+        .remove-job-btn {
+            display: inline-block;
+            background-color: #f5f5f5;
+            color: #444;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            flex: 1;
+        }
+        .remove-job-btn:hover {
+            background-color: #e0e0e0;
+        }
+        /* Job description styles */
+        .job-description-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .description-content {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            background-color: #fafafa;
+        }
+        .formatted-html ul, 
+        .formatted-html ol {
+            padding-left: 25px;
+            margin: 10px 0;
+        }
+        .formatted-html li {
+            margin-bottom: 5px;
+        }
+        .formatted-html h1, 
+        .formatted-html h2, 
+        .formatted-html h3, 
+        .formatted-html h4 {
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+        .formatted-html p {
+            margin-bottom: 10px;
+        }
+        .formatted-html strong, 
+        .formatted-html b {
+            font-weight: bold;
+        }
+        .formatted-html em, 
+        .formatted-html i {
+            font-style: italic;
+        }
+        .no-description {
+            color: #999;
+            font-style: italic;
+        }
+        /* Analysis section styling */
+        .formatted-html h2 {
+            margin-top: 0;
+            font-size: 1.4em;
+            color: #333;
+        }
+        .formatted-html strong {
+            color: #0077b5;
+            font-size: 1.1em;
+        }
+        .preview-section .formatted-html ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        .preview-section .formatted-html li {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+        /* Navigation bar */
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #ddd;
+        }
+        .nav-button {
+            padding: 8px 15px;
+            background-color: #f5f5f5;
+            color: #444;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .nav-button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Matching Jobs</h1>
+    </div>
+    <div class="nav-bar">
+        <a href="yes_jobs.html" class="nav-button" style="background-color: #0077b5; color: white;">View Matching Jobs</a>
+        <a href="no_jobs.html" class="nav-button">View Rejected Jobs</a>
+    </div>
+    <div class="container">
+        <ul class="job-list" id="jobList">
+            <!-- Job items will be populated by JavaScript -->
+        </ul>
+        <div class="job-frame" id="frameContainer">
+            <div class="empty-state">
+                <h2>Select a job listing</h2>
+                <p>Click on a job from the list on the left to view it here.</p>
+            </div>
+        </div>
+    </div>
+    <script src="yes_jobs.js"></script>
+</body>
+</html> 
